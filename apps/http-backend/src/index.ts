@@ -100,8 +100,10 @@ app.post("/room", middleware, async (req, res) => {
 });
 
 app.get("/chats/:roomId", async (req, res) => {
-    const roomId = Number(req.params.roomId);
-    const messages = await prismaClient.chat.findMany({
+
+    try {
+        const roomId = Number(req.params.roomId);
+        const messages = await prismaClient.chat.findMany({
         where: {
             roomId: roomId
         },
@@ -111,7 +113,26 @@ app.get("/chats/:roomId", async (req, res) => {
         take: 50,
     });
     res.json({ messages });
+
+    } catch(e) {
+        res.status(400).json({
+            error: "Invalid room id"
+        });
+    }
+    
 });
+
+
+app.get("/room/:slug", async (req, res) => {
+    const slug = req.params.slug;
+    const room = await prismaClient.room.findUnique({
+        where: {
+            slug: slug
+        }
+    });
+    res.json({ room });
+});
+
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
 });
