@@ -1,0 +1,7 @@
+# Ignore environment variables (CRITICAL SECURITY)
+.env
+.env.*
+*.local
+
+# Ignore compiled typescript output just in case
+dist/

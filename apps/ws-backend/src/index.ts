@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { WebSocket, WebSocketServer } from 'ws';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from '@repo/backend-common/config';
@@ -83,27 +84,32 @@ wss.on('connection', function connection(ws, request) {
       const roomId = parsedData.roomId;
       const message = parsedData.message;
 
-      try {
-        await prismaClient.chat.create({
-            data: {
-              roomId: Number(roomId),
-              message,
-              userId
-            }
-        });
+      // 1. SEND TO OTHER USERS FIRST (This guarantees the drawing appears instantly!)
+      users.forEach(user => {
+        // Send to everyone in the room EXCEPT the person who just drew it
+        if (user.rooms.includes(roomId) && user.ws !== ws) {
+          user.ws.send(JSON.stringify({
+            type: "chat",
+            message: message,
+            roomId
+          }))
+        }
+      })
 
-        users.forEach(user => {
-            if (user.rooms.includes(roomId)) {
-            user.ws.send(JSON.stringify({
-                type: "chat",
-                message: message,
-                roomId
-            }))
-            }
-        })
-      } catch (e) {
-         console.error("Failed to save/send message", e);
-      }
+      // 2. SAVE TO DATABASE SECOND 
+     try {
+        await prismaClient.chat.create({
+               data: {
+                  // 1. Force the roomId to be a Number!
+                  roomId: Number(parsedData.roomId), 
+                  message: parsedData.message,
+                  userId: userId // (or however you named your user ID variable)
+                }
+              });
+          } catch (e) {
+          // 2. Print the actual error so we know exactly what Postgres is complaining about
+          console.error("DB Save Error:", e); 
+        }
     }
   });
 

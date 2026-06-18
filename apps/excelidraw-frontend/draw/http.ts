@@ -3,14 +3,37 @@ import axios from "axios";
 
 export async function getExistingShapes(roomId: string) {
     try {
-        const res = await axios.get(`${HTTP_BACKEND}/chats/${roomId}`);
-        return res.data.messages.map((x: { message: string }) => {
-            const messageData = JSON.parse(x.message);
-            return messageData.shape;
+        // 1. Grab the auth token
+        const token = localStorage.getItem("token");
+        
+        if (!token) {
+            console.error("No token found, skipping history fetch.");
+            return [];
+        }
+
+        // 2. Pass the token in the headers so Express allows the request
+        const res = await axios.get(`${HTTP_BACKEND}/chats/${roomId}`, {
+            headers: {
+                Authorization: token
+            }
         });
-    } catch (err: any) {
-        console.log("STATUS:", err?.response?.status);
-        console.log("DATA:", err?.response?.data);
-        throw err;
+        
+        const messages = res.data.messages;
+
+        if (!messages) return [];
+
+        const shapes = messages.map((x: { message: string }) => {
+            try {
+                const messageData = JSON.parse(x.message);
+                return messageData.shape;
+            } catch (e) {
+                return null;
+            }
+        }).filter((shape: any) => shape !== null);
+
+        return shapes;
+    } catch (e) {
+        console.error("No existing chats found or invalid room ID. Starting fresh.");
+        return []; // If it fails, just return an empty canvas
     }
 }
