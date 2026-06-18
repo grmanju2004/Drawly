@@ -1,4 +1,6 @@
 Drawly 🎨
+
+
 Drawly is a high-performance, real-time collaborative whiteboard application designed for teams to brainstorm and visualize ideas together. Built with a modern tech stack, it provides a seamless, "Excalidraw-like" experience with persistent storage and multi-user synchronization.
 
 🚀 Key Features
