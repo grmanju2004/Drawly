@@ -16,37 +16,29 @@ app.use(cors());
 app.post("/signup", async (req, res) => {
     const ParsedData = CreateUserSchema.safeParse(req.body);
     if(!ParsedData.success) {
-        res.json({ 
-            error: "Invalid data"
-     })
-     return ;
+        // Fix: Return 400 Bad Request
+        res.status(400).json({ error: "Invalid data", details: ParsedData.error });
+        return;
     }
     try {
-        const user =  await prismaClient.user.create({
-       data: {
-        email: ParsedData.data.username,
-        password: ParsedData.data.password,
-        name: ParsedData.data.name
-       }
-    })
-    res.json({
-        userId: user.id
-    })
+        const user = await prismaClient.user.create({
+            data: {
+                email: ParsedData.data.username,
+                password: ParsedData.data.password,
+                name: ParsedData.data.name
+            }
+        });
+        res.json({ userId: user.id });
     } catch(e) {
         console.log(e);
-        res.status(409).json({
-            error: "User already exists"
-        })
+        res.status(409).json({ error: "User already exists" });
     }
-    
 });
 
-app.post("/signin",async (req, res) => {
+app.post("/signin", async (req, res) => {
     const ParsedData = SigninSchema.safeParse(req.body);
     if(!ParsedData.success) {
-        res.json({ 
-            error: "Invalid data"
-        });
+        res.status(400).json({ error: "Invalid data" });
         return;
     }
 
@@ -58,9 +50,7 @@ app.post("/signin",async (req, res) => {
     });
 
     if(!user) {
-        res.status(403).json({
-            error: "Invalid credentials"
-        });
+        res.status(403).json({ error: "Invalid credentials" });
         return;
     }
 
@@ -73,66 +63,67 @@ app.post("/signin",async (req, res) => {
 app.post("/room", middleware, async (req, res) => {
     const ParsedData = CreateRoomSchema.safeParse(req.body);
     if(!ParsedData.success) {
-        res.json({
-            error: "Invalid data"
-        });
+        res.status(400).json({ error: "Invalid data" });
         return;
     }
     // @ts-ignore
-
     const userId = req.userId;
 
     try {
         const room = await prismaClient.room.create({
-        data: {
-            slug: ParsedData.data.name,
-            adminId: userId
-        }
-    });
-    res.json({ 
-        roomId: room.id
-    });
-
-    } catch(e) {
-        res.status(409).json({
-            error: "Room already exists"
+            data: {
+                slug: ParsedData.data.name,
+                adminId: userId
+            }
         });
+        res.json({ roomId: room.id });
+    } catch(e) {
+        res.status(409).json({ error: "Room already exists" });
     }
-
 });
 
 app.get("/chats/:roomId", async (req, res) => {
-
     try {
         const roomId = Number(req.params.roomId);
-        const messages = await prismaClient.chat.findMany({
-        where: {
-            roomId: roomId
-        },
-        orderBy: {
-            id: "desc"
-        },
-        take: 50,
-    });
-    res.json({ messages });
+        
+        // Prevent NaN query crashing the database call
+        if(isNaN(roomId)) {
+            res.status(400).json({ error: "Invalid room ID format" });
+            return;
+        }
 
-    } catch(e) {
-        res.status(400).json({
-            error: "Invalid room id"
+        const messages = await prismaClient.chat.findMany({
+            where: {
+                roomId: roomId
+            },
+            orderBy: {
+                id: "desc"
+            },
+            take: 50,
         });
+        res.json({ messages });
+    } catch(e) {
+        res.status(400).json({ error: "Error fetching chats" });
     }
-    
 });
 
-
 app.get("/room/:slug", async (req, res) => {
-    const slug = req.params.slug;
-    const room = await prismaClient.room.findUnique({
-        where: {
-            slug: slug
+    try {
+        const slug = req.params.slug;
+        const room = await prismaClient.room.findUnique({
+            where: {
+                slug: slug
+            }
+        });
+        
+        if (!room) {
+            res.status(404).json({ error: "Room not found" });
+            return;
         }
-    });
-    res.json({ room });
+        res.json({ room });
+    } catch (e) {
+        res.status(400).json({ error: "Error fetching room" });
+    }
 });
 
 app.listen(3001, () => {

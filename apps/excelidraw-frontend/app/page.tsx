@@ -1,129 +1,128 @@
-import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
-import { Pencil, Share2, Users2, Sparkles, Download } from "lucide-react";
+import { Pencil, Share2, Users2, Sparkles, MoveRight } from "lucide-react";
 import { GithubIcon } from "@/components/GithubIcon";
 import Link from "next/link";
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      
+      {/* Subtle Dot Grid Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none" 
+           style={{ 
+             backgroundImage: 'radial-gradient(#d4d4d8 1px, transparent 1px)', 
+             backgroundSize: '32px 32px' 
+           }}>
+      </div>
+
+      {/* Navigation */}
+      <nav className="relative z-10 border-b border-zinc-200/60 bg-[#FDFCF8]/80 backdrop-blur-md">
+        <div className="container mx-auto px-6 h-24 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-zinc-900 flex items-center justify-center shadow-sm">
+               <Pencil className="w-5 h-5 text-[#FDFCF8]" />
+            </div>
+            <span className="font-serif text-3xl font-semibold tracking-tight">Drawly.</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="/signin" className="text-sm font-medium tracking-wide hover:text-zinc-500 transition-colors uppercase">
+              Log in
+            </Link>
+            <Link href="/signup">
+              <button className="h-12 px-8 rounded-full bg-zinc-900 text-[#FDFCF8] text-sm font-medium tracking-wide hover:bg-zinc-800 transition-all uppercase">
+                Start drawing
+              </button>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <header className="relative overflow-hidden">
-        <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-foreground">
-              Collaborative Whiteboarding
-              <span className="text-primary block">Made Simple</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-              Create, collaborate, and share beautiful diagrams and sketches with our intuitive drawing tool. 
-              No sign-up required.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link href={"/signin"}>
-                <Button variant={"primary"} size="lg" className="h-12 px-6">
-                  Sign in
-                  <Pencil className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button variant="outline" size="lg" className="h-12 px-6">
-                  Sign up
-                </Button>
-              </Link>
-            </div>
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center pt-24 pb-32 px-6">
+        <div className="max-w-5xl mx-auto text-center space-y-10">
+          
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-zinc-200 bg-white/60 text-xs font-semibold tracking-widest text-zinc-600 uppercase">
+            <Sparkles className="w-3 h-3" />
+            <span>Drawly Beta is live</span>
+          </div>
+          
+          <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl lg:text-[110px] leading-[0.9] tracking-tight text-zinc-900">
+            The canvas for <br className="hidden md:block"/>
+            <span className="italic text-zinc-500">clear thinking.</span>
+          </h1>
+          
+          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-zinc-600 font-light leading-relaxed">
+            An elegant, collaborative whiteboarding tool designed to get out of your way. Sketch architectures, draft ideas, and build together in real-time.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+            <Link href="/signup">
+              <button className="group flex items-center gap-3 h-14 px-8 rounded-full bg-zinc-900 text-[#FDFCF8] text-base font-medium hover:bg-zinc-800 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-zinc-900/10">
+                Open Canvas
+                <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
+            <Link href="/gallery">
+              <button className="h-14 px-8 rounded-full border border-zinc-300 bg-white/50 text-base font-medium hover:bg-white hover:border-zinc-400 transition-all active:scale-95">
+                Explore Gallery
+              </button>
+            </Link>
           </div>
         </div>
-      </header>
+      </main>
 
-      {/* Features Section */}
-      <section className="py-24 bg-muted/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="p-6 border-2 hover:border-primary transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Share2 className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold">Real-time Collaboration</h3>
+      {/* Minimalist Feature Grid */}
+      <section className="relative z-10 border-t border-zinc-200/60 bg-white py-32">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16 gap-y-16">
+            
+            <div className="space-y-6 group">
+              <div className="w-14 h-14 border border-zinc-200 flex items-center justify-center bg-[#FDFCF8] group-hover:bg-zinc-900 group-hover:text-white transition-colors duration-300">
+                <Share2 className="w-6 h-6" />
               </div>
-              <p className="mt-4 text-muted-foreground">
-                Work together with your team in real-time. Share your drawings instantly with a simple link.
+              <h3 className="font-serif text-3xl font-medium">Real-time sync.</h3>
+              <p className="text-zinc-600 leading-relaxed font-light text-lg">
+                Share a link and watch cursors dance across the screen. Collaboration happens instantly, no matter where you are.
               </p>
-            </Card>
-
-            <Card className="p-6 border-2 hover:border-primary transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Users2 className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold">Multiplayer Editing</h3>
-              </div>
-              <p className="mt-4 text-muted-foreground">
-                Multiple users can edit the same canvas simultaneously. See who's drawing what in real-time.
-              </p>
-            </Card>
-
-            <Card className="p-6 border-2 hover:border-primary transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Sparkles className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold">Smart Drawing</h3>
-              </div>
-              <p className="mt-4 text-muted-foreground">
-                Intelligent shape recognition and drawing assistance helps you create perfect diagrams.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-primary rounded-3xl p-8 sm:p-16">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
-                Ready to start creating?
-              </h2>
-              <p className="mx-auto mt-6 max-w-xl text-lg text-primary-foreground/80">
-                Join thousands of users who are already creating amazing diagrams and sketches.
-              </p>
-              <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button size="lg" variant="secondary" className="h-12 px-6">
-                  Open Canvas
-                  <Pencil className="ml-2 h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="lg" className="h-12 px-6 bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                  View Gallery
-                </Button>
-              </div>
             </div>
+
+            <div className="space-y-6 group">
+              <div className="w-14 h-14 border border-zinc-200 flex items-center justify-center bg-[#FDFCF8] group-hover:bg-zinc-900 group-hover:text-white transition-colors duration-300">
+                <Users2 className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif text-3xl font-medium">Built for teams.</h3>
+              <p className="text-zinc-600 leading-relaxed font-light text-lg">
+                From engineering diagrams to product roadmaps, bring your entire team onto an infinite, shared canvas.
+              </p>
+            </div>
+
+            <div className="space-y-6 group">
+              <div className="w-14 h-14 border border-zinc-200 flex items-center justify-center bg-[#FDFCF8] group-hover:bg-zinc-900 group-hover:text-white transition-colors duration-300">
+                <Pencil className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif text-3xl font-medium">Fluid drawing.</h3>
+              <p className="text-zinc-600 leading-relaxed font-light text-lg">
+                A minimal interface that fades away. Smart shape recognition and perfectly tuned tools keep you in the flow.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t">
-        <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <p className="text-sm text-muted-foreground">
-              © 2024 Excalidraw Clone. All rights reserved.
-            </p>
-            <div className="flex space-x-6">
-              <a href="https://github.com" className="text-muted-foreground hover:text-primary">
-                <GithubIcon className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                <Download className="h-5 w-5" />
-              </a>
-            </div>
+      <footer className="relative z-10 border-t border-zinc-200/60 bg-[#FDFCF8]">
+        <div className="container mx-auto px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <p className="text-sm text-zinc-500 font-medium">
+            © {new Date().getFullYear()} Drawly. 
+          </p>
+          <div className="flex items-center gap-6">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-zinc-900 transition-colors">
+              <span className="sr-only">GitHub</span>
+              <GithubIcon className="h-6 w-6" />
+            </a>
           </div>
         </div>
       </footer>
     </div>
   );
 }
-
-export default App;

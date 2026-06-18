@@ -6,9 +6,14 @@ export default {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    '../../packages/ui/src/**/*.{ts,tsx}'
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['var(--font-eb-garamond)', 'serif'],
+        sans: ['var(--font-inter)', 'sans-serif'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
