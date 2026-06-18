@@ -45,32 +45,38 @@ pnpm installed.
 A Neon PostgreSQL database URL.
 
 Installation
-Clone the repository:
+
+1. Clone the repository:
 
 Bash
 git clone <your-repo-url>
 cd Drawly
-Install dependencies:
+
+2. Install dependencies:
 
 Bash
 pnpm install
-Set up environment variables in apps/http-backend/.env and apps/ws-backend/.env:
+
+3. Set up environment variables in apps/http-backend/.env and apps/ws-backend/.env:
 
 Code snippet
 DATABASE_URL="your_neon_db_connection_string"
 JWT_SECRET="your_secret_key"
-Run the development environment:
+
+4. Run the development environment:
 
 Bash
 pnpm run dev
+
 💡 How to Use
-Create: Log in and create a new canvas from the Dashboard.
 
-Share: Copy the room slug from the URL bar and share it with your team.
+1. Create: Log in and create a new canvas from the Dashboard.
 
-Collaborate: Everyone in the room sees updates in real-time. Drawings are automatically saved to the database.
+2. Share: Copy the room slug from the URL bar and share it with your team.
 
-Manage: Use the toolbar to switch tools, erase shapes, or clear the entire canvas.
+3. Collaborate: Everyone in the room sees updates in real-time. Drawings are automatically saved to the database.
+
+4. Manage: Use the toolbar to switch tools, erase shapes, or clear the entire canvas.
 
 🏗 Future Enhancements
 [ ] Color picker for different stroke/fill colors.
