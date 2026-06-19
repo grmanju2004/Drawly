@@ -14,7 +14,6 @@ export function RoomCanvas() {
     const router = useRouter();
     const params = useParams(); 
     
-    // Extract the slug (or ID) from the URL, no matter what the folder is named
     const slug = (params.roomId || params.roomid || params.id)?.toString();
 
     useEffect(() => {
@@ -28,21 +27,17 @@ export function RoomCanvas() {
                     return;
                 }
 
-                // 1. Ask the backend to translate the Slug (or text ID) into the real database ID
                 const response = await axios.get(`http://localhost:3001/room/${slug}`, {
                     headers: { Authorization: token }
                 });
                 
-                // Extract the real database ID from the response and save it to state!
                 const realDatabaseId = response.data.room.id.toString(); 
                 setRealRoomId(realDatabaseId);
-                
-                // 2. Connect to the WebSocket
+               
                 const ws = new WebSocket(`${WS_URL}?token=${token}`);
 
                 ws.onopen = () => {
                     setSocket(ws);
-                    // 3. Send the REAL ID to the WebSocket server, not the text slug
                     ws.send(JSON.stringify({
                         type: "join_room",
                         roomId: realDatabaseId 
@@ -72,7 +67,6 @@ export function RoomCanvas() {
         );
     }
 
-    // We need BOTH the WebSocket and the Real Database ID before we render the canvas
     if (!socket || !realRoomId) {
         return (
             <div className="flex h-screen items-center justify-center bg-[#FDFCF8]">
@@ -83,7 +77,6 @@ export function RoomCanvas() {
 
     return (
         <div>
-            {/* We pass the true database number ID to the canvas so it can fetch the history! */}
             <Canvas roomId={realRoomId} socket={socket} />
         </div>
     );

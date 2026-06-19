@@ -38,8 +38,7 @@ wss.on('connection', function connection(ws, request) {
     ws.close();
     return;
   }
-  
-  // Safe URL splitting (avoids undefined errors)
+ 
   const queryParams = new URLSearchParams(url.split('?')[1] || "");
   const token = queryParams.get('token') || "";
   const userId = checkUser(token);
@@ -65,7 +64,6 @@ wss.on('connection', function connection(ws, request) {
 
     if (parsedData.type === "join_room") {
       const user = users.find(x => x.ws === ws);
-      // Prevent adding the same room multiple times
       if (user && !user.rooms.includes(parsedData.roomId)) {
         user.rooms.push(parsedData.roomId);
       }
@@ -76,7 +74,6 @@ wss.on('connection', function connection(ws, request) {
       if (!user) {
         return;
       }
-      // Fix: Use !== to REMOVE the room. Also standardized to use roomId.
       user.rooms = user.rooms.filter(x => x !== parsedData.roomId);
     }
 
@@ -84,9 +81,7 @@ wss.on('connection', function connection(ws, request) {
       const roomId = parsedData.roomId;
       const message = parsedData.message;
 
-      // 1. SEND TO OTHER USERS FIRST (This guarantees the drawing appears instantly!)
       users.forEach(user => {
-        // Send to everyone in the room EXCEPT the person who just drew it
         if (user.rooms.includes(roomId) && user.ws !== ws) {
           user.ws.send(JSON.stringify({
             type: "chat",
@@ -96,24 +91,20 @@ wss.on('connection', function connection(ws, request) {
         }
       })
 
-      // 2. SAVE TO DATABASE SECOND 
      try {
         await prismaClient.chat.create({
                data: {
-                  // 1. Force the roomId to be a Number!
                   roomId: Number(parsedData.roomId), 
                   message: parsedData.message,
-                  userId: userId // (or however you named your user ID variable)
+                  userId: userId 
                 }
               });
           } catch (e) {
-          // 2. Print the actual error so we know exactly what Postgres is complaining about
           console.error("DB Save Error:", e); 
         }
     }
   });
 
-  // Remember to remove users when they disconnect to avoid memory leaks
   ws.on('close', () => {
     const index = users.findIndex(x => x.ws === ws);
     if (index !== -1) {

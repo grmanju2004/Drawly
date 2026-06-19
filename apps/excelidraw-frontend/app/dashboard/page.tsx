@@ -15,7 +15,6 @@ export default function Dashboard() {
     
     const router = useRouter();
 
-    // Kick unauthenticated users back to login
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -30,9 +29,6 @@ export default function Dashboard() {
 
         try {
             const token = localStorage.getItem("token");
-            
-            // Format the text into a safe, unique URL slug!
-            // Example: "My Cool Canvas" -> "my-cool-canvas-8492"
             const safeSlug = roomName
                 .trim()
                 .toLowerCase()
@@ -41,7 +37,7 @@ export default function Dashboard() {
 
             await axios.post(
                 `${BACKEND_URL}/room`,
-                { name: safeSlug }, // Send the safe, unique slug to the backend
+                { name: safeSlug }, 
                 {
                     headers: {
                         Authorization: token, 
@@ -49,7 +45,6 @@ export default function Dashboard() {
                 }
             );
 
-            // Navigate directly to the slug URL
             router.push(`/canvas/${safeSlug}`);
         } catch (err: any) {
             console.error("Room Creation Error:", err);
@@ -61,8 +56,6 @@ export default function Dashboard() {
     const handleJoinRoom = (e: React.FormEvent) => {
         e.preventDefault();
         if (joinRoomId.trim()) {
-            // Just push whatever they typed (ID or Slug) to the URL.
-            // The RoomCanvas bouncer will automatically figure out what to do!
             router.push(`/canvas/${joinRoomId.trim()}`);
         }
     };
@@ -70,7 +63,6 @@ export default function Dashboard() {
     return (
         <div className="min-h-screen bg-[#FDFCF8] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white">
             
-            {/* Minimal Navbar */}
             <nav className="border-b border-zinc-200/60 bg-[#FDFCF8]/80 backdrop-blur-md">
                 <div className="container mx-auto px-6 h-20 flex items-center justify-between max-w-5xl">
                     <div className="flex items-center gap-3">
@@ -109,7 +101,6 @@ export default function Dashboard() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     
-                    {/* Create Room Card */}
                     <div className="bg-white p-8 rounded-2xl border border-zinc-200 shadow-xl shadow-zinc-200/20 group">
                         <div className="w-12 h-12 bg-zinc-100 text-zinc-900 flex items-center justify-center rounded-xl mb-6 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
                             <Plus className="w-6 h-6" />

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Game } from "@/draw/Game";
 import { Circle, Pencil, Square, Type, Eraser, Trash, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation"; // Import the router!
+import { useRouter } from "next/navigation";
 
 export type Tool = "circle" | "rect" | "pencil" | "text" | "eraser";
 
@@ -12,7 +12,6 @@ export function Canvas({ roomId, socket }: { socket: WebSocket; roomId: string }
     const [game, setGame] = useState<Game>();
     const [selectedTool, setSelectedTool] = useState<Tool>("pencil");
     
-    // Initialize the Next.js router
     const router = useRouter();
 
     useEffect(() => {
@@ -47,11 +46,9 @@ export function Canvas({ roomId, socket }: { socket: WebSocket; roomId: string }
 
     return (
         <div className="relative w-screen h-screen overflow-hidden bg-zinc-900">
-            
-            {/* Top Left Exit Button */}
+         
             <button
                 onClick={() => {
-                    // Make sure to clean up the game engine before leaving
                     game?.destroy();
                     router.push("/dashboard");
                 }}
@@ -61,7 +58,6 @@ export function Canvas({ roomId, socket }: { socket: WebSocket; roomId: string }
                 <LogOut className="w-5 h-5 ml-[-2px]" /> 
             </button>
 
-            {/* Floating Toolbar */}
             <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#FDFCF8] px-4 py-3 rounded-2xl border border-zinc-200 shadow-2xl z-10 transition-all">
                 <button
                     onClick={() => setSelectedTool("pencil")}
@@ -138,7 +134,6 @@ export function Canvas({ roomId, socket }: { socket: WebSocket; roomId: string }
                 </button>
             </div>
 
-            {/* The Drawing Canvas */}
             <canvas
                 ref={canvasRef}
                 className="block touch-none cursor-crosshair"

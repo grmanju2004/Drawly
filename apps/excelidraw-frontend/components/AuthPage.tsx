@@ -5,13 +5,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-// Make sure this points to your Express server, NOT Next.js
 const BACKEND_URL = "http://localhost:3001"; 
 
 export function AuthPage({ isSignin }: { isSignin: boolean }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [name, setName] = useState(""); // Needed for signup
+    const [name, setName] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     
@@ -24,8 +23,6 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
 
         try {
             const endpoint = isSignin ? "/signin" : "/signup";
-            
-            // Your backend types.ts expects 'username', 'password', and (for signup) 'name'
             const payload = isSignin 
                 ? { username: email, password }
                 : { username: email, password, name: name || email.split("@")[0] };
@@ -33,17 +30,13 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
             const response = await axios.post(`${BACKEND_URL}${endpoint}`, payload);
 
             if (isSignin) {
-                // 1. Save the JWT token
                 localStorage.setItem("token", response.data.token);
-                // 2. Redirect to the canvas
-                router.push("/dashboard"); // Update this path to wherever your canvas lives
+                router.push("/dashboard"); 
             } else {
-                // If signup is successful, take them to the login page
                 router.push("/signin");
             }
         } catch (err: any) {
             console.error("Auth Error:", err);
-            // Grab the specific error message sent from your Express backend
             setError(err.response?.data?.error || "An error occurred. Make sure your backend is running on port 3001.");
         } finally {
             setIsLoading(false);
@@ -53,8 +46,7 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#FDFCF8] py-12 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="w-full max-w-md space-y-8 bg-white p-10 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200">
-                
-                {/* Header */}
+           
                 <div>
                     <h2 className="mt-2 text-center text-4xl font-serif font-medium tracking-tight text-zinc-900">
                         {isSignin ? "Welcome back." : "Join Drawly."}
@@ -70,10 +62,8 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
                     </p>
                 </div>
 
-                {/* Form */}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     
-                    {/* Error Message Display */}
                     {error && (
                         <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg text-center">
                             {error}

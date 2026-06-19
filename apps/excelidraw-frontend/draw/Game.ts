@@ -118,7 +118,6 @@ export class Game {
                 this.ctx.stroke();
                 this.ctx.closePath();
             } else if (shape.type === "text") {
-                // Update font to a handwritten whiteboard style
                 this.ctx.font = "24px 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif";
                 this.ctx.textBaseline = "middle";
                 this.ctx.fillText(shape.text, shape.x, shape.y);
@@ -127,7 +126,7 @@ export class Game {
     }
 
     mouseDownHandler = (e: MouseEvent) => {
-        if (this.isTyping) return; // Prevent drawing if we are currently typing text
+        if (this.isTyping) return; 
         this.clicked = true;
         this.startX = e.clientX;
         this.startY = e.clientY;
@@ -185,16 +184,13 @@ export class Game {
         const clickX = e.clientX;
         const clickY = e.clientY;
 
-        // --- NEW INLINE TEXT EDITOR ---
         if (this.selectedTool === "text") {
             this.isTyping = true;
-            
-            // 1. Create a temporary HTML input perfectly aligned with the mouse click
+           
             const input = document.createElement("input");
             input.type = "text";
             input.style.position = "absolute";
             input.style.left = `${clickX}px`;
-            // Adjust Y slightly so the text baseline matches where the user clicked
             input.style.top = `${clickY - 12}px`; 
             input.style.background = "transparent";
             input.style.color = "white";
@@ -209,9 +205,7 @@ export class Game {
             const container = this.canvas.parentElement;
             if (container) {
                 container.appendChild(input);
-                setTimeout(() => input.focus(), 0); // Focus it immediately
-
-                // 2. Logic to save the text when user is done
+                setTimeout(() => input.focus(), 0);
                 const finishTyping = () => {
                     if (!this.isTyping) return;
                     this.isTyping = false;
@@ -232,24 +226,22 @@ export class Game {
                         }));
                         this.clearCanvas();
                     }
-                    input.remove(); // Delete the HTML element
+                    input.remove(); 
                 };
 
-                // 3. Listeners for Enter, Escape, or clicking away (blur)
                 input.addEventListener("blur", finishTyping);
                 input.addEventListener("keydown", (ev) => {
                     if (ev.key === "Enter") {
                         finishTyping();
                     } else if (ev.key === "Escape") {
                         this.isTyping = false;
-                        input.remove(); // Just cancel without saving
+                        input.remove(); 
                     }
                 });
             }
             return;
         }
 
-        // --- ERASER TOOL LOGIC ---
         if (this.selectedTool === "eraser") {
             const initialLength = this.existingShapes.length;
 
@@ -290,7 +282,6 @@ export class Game {
             return;
         }
 
-        // --- RECTANGLE & CIRCLE LOGIC ---
         const width = clickX - this.startX;
         const height = clickY - this.startY;
         let shape: Shape | null = null;

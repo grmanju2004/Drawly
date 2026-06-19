@@ -16,7 +16,6 @@ app.use(cors());
 app.post("/signup", async (req, res) => {
     const ParsedData = CreateUserSchema.safeParse(req.body);
     if(!ParsedData.success) {
-        // Fix: Return 400 Bad Request
         res.status(400).json({ error: "Invalid data", details: ParsedData.error });
         return;
     }
@@ -82,13 +81,12 @@ app.post("/room", middleware, async (req, res) => {
     }
 });
 
-// Fetch existing drawing history for a room
 app.get("/chats/:roomId", async (req, res) => {
     try {
         const roomId = Number(req.params.roomId);
         const messages = await prismaClient.chat.findMany({
             where: { roomId: roomId },
-            orderBy: { id: "asc" } // Load them in the exact order they were drawn
+            orderBy: { id: "asc" } 
         });
         res.json({ messages });
     } catch(e) {
@@ -115,7 +113,6 @@ app.get("/room/:slug", async (req, res) => {
     }
 });
 
-// Add this route to check if a room ID is valid
 app.get("/check-room/:roomId", async (req, res) => {
     try {
         const roomId = Number(req.params.roomId);
@@ -138,27 +135,23 @@ app.get("/check-room/:roomId", async (req, res) => {
     }
 });
 
-// Smart Bouncer Endpoint: Finds a room by its ID *or* its Slug!
 app.get("/room/:slug", async (req, res) => {
     try {
         const param = req.params.slug;
         let room;
 
-        // 1. Try to search by ID first (if the user typed a pure number like "16")
         if (!isNaN(Number(param))) {
             room = await prismaClient.room.findUnique({
                 where: { id: Number(param) }
             });
         }
 
-        // 2. If it wasn't a number, or the ID wasn't found, search by exact Slug!
         if (!room) {
             room = await prismaClient.room.findFirst({
-                where: { slug: param } // Matches "my-cool-canvas-1234"
+                where: { slug: param } 
             });
         }
 
-        // 3. If neither worked, kick them out
         if (!room) {
             res.status(404).json({ error: "Room not found" });
             return;

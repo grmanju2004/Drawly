@@ -3,7 +3,6 @@ import axios from "axios";
 
 export async function getExistingShapes(roomId: string) {
     try {
-        // 1. Grab the auth token
         const token = localStorage.getItem("token");
         
         if (!token) {
@@ -11,7 +10,6 @@ export async function getExistingShapes(roomId: string) {
             return [];
         }
 
-        // 2. Pass the token in the headers so Express allows the request
         const res = await axios.get(`${HTTP_BACKEND}/chats/${roomId}`, {
             headers: {
                 Authorization: token
@@ -34,6 +32,6 @@ export async function getExistingShapes(roomId: string) {
         return shapes;
     } catch (e) {
         console.error("No existing chats found or invalid room ID. Starting fresh.");
-        return []; // If it fails, just return an empty canvas
+        return []; 
     }
 }

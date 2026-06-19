@@ -6,7 +6,6 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       
-      {/* Subtle Dot Grid Background */}
       <div className="absolute inset-0 z-0 pointer-events-none" 
            style={{ 
              backgroundImage: 'radial-gradient(#d4d4d8 1px, transparent 1px)', 
@@ -14,7 +13,6 @@ export default function App() {
            }}>
       </div>
 
-      {/* Navigation */}
       <nav className="relative z-10 border-b border-zinc-200/60 bg-[#FDFCF8]/80 backdrop-blur-md">
         <div className="container mx-auto px-6 h-24 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -36,7 +34,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center pt-24 pb-32 px-6">
         <div className="max-w-5xl mx-auto text-center space-y-10">
           
